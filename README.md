@@ -1,4 +1,24 @@
-# Q Inspect
+<p align="center">
+  <img src=".github/assets/banner.svg" alt="Q Inspect — catch malicious QR codes before anyone opens them" width="100%">
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python">
+  <img src="https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi&logoColor=white" alt="FastAPI">
+  <img src="https://img.shields.io/badge/Playwright-dynamic%20analysis-2EAD33?logo=playwright&logoColor=white" alt="Playwright">
+  <img src="https://img.shields.io/badge/Expo-mobile-000020?logo=expo&logoColor=white" alt="Expo">
+  <img src="https://img.shields.io/badge/Android-Kotlin-7F52FF?logo=kotlin&logoColor=white" alt="Kotlin">
+  <img src="https://img.shields.io/badge/Tor-optional%20egress-7D4698?logo=torproject&logoColor=white" alt="Tor">
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> ·
+  <a href="#getting-started">Getting started</a> ·
+  <a href="#api">API</a> ·
+  <a href="#mobile-apps">Mobile apps</a>
+</p>
+
+---
 
 A multi-layered **pre-visit inspection engine for malicious QR codes (quishing)**.
 A QR code is decoded, classified, and its target analysed on the server *before*
