@@ -14,10 +14,6 @@ venv/
 # Playwright / browser cache
 .cache/
 
-# Node / Expo
-node_modules/
-.expo/
-
 # Local Claude Code settings
 .claude/
 
@@ -29,3 +25,7 @@ node_modules/
 Thumbs.db
 .vscode/
 .idea/
+
+# Local-only app folders (the APK is published on the Releases page)
+android/
+mobile/

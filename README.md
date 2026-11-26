@@ -6,7 +6,6 @@
   <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/FastAPI-backend-009688?logo=fastapi&logoColor=white" alt="FastAPI">
   <img src="https://img.shields.io/badge/Playwright-dynamic%20analysis-2EAD33?logo=playwright&logoColor=white" alt="Playwright">
-  <img src="https://img.shields.io/badge/Expo-mobile-000020?logo=expo&logoColor=white" alt="Expo">
   <img src="https://img.shields.io/badge/Android-Kotlin-7F52FF?logo=kotlin&logoColor=white" alt="Kotlin">
   <img src="https://img.shields.io/badge/Tor-optional%20egress-7D4698?logo=torproject&logoColor=white" alt="Tor">
 </p>
@@ -15,7 +14,7 @@
   <a href="#features">Features</a> ·
   <a href="#getting-started">Getting started</a> ·
   <a href="#api">API</a> ·
-  <a href="#mobile-apps">Mobile apps</a>
+  <a href="#android-app">Android app</a>
 </p>
 
 ---
@@ -44,8 +43,6 @@ the user ever opens it — the scanning device never connects to the target.
 ```
 backend/          FastAPI app (api.py) and the analysis modules (modules/)
 frontend/         Web UI served by the backend at /
-mobile/           Expo / React Native app (camera scan → backend verdict)
-mobile-native/    Native Android (Kotlin) client — source files + setup guide
 tests/            Test scripts for the decoder, classifier, pipeline and API
 run_server.py     Starts the backend on http://127.0.0.1:8000
 ```
@@ -81,16 +78,18 @@ python run_server.py
 | POST   | `/api/scan-url`     | Inspect a URL directly                       |
 | POST   | `/api/scan-payload` | Inspect decoded QR text (used by the apps)   |
 
-## Mobile apps
+## Android app
 
-Both apps decode the QR on the device and send only the decoded text to
-`/api/scan-payload`. To reach your local backend from a phone, expose it with a
-tunnel (e.g. `cloudflared tunnel --url http://127.0.0.1:8000`) and paste the URL
-into the app.
+The app scans a QR code with the camera, decodes it on the device and sends only
+the decoded text to `/api/scan-payload`, then shows the verdict. The phone never
+connects to the scanned target.
 
-- Expo app: see [mobile/README.md](mobile/README.md)
-- Native Android app: see [mobile-native/README.md](mobile-native/README.md)
-  — a prebuilt APK is available on the Releases page.
+**Install:** download the APK from the [Releases](../../releases) page and
+sideload it (Android 7.0+).
+
+**Connect it to your backend:** expose the local server with a tunnel, e.g.
+`cloudflared tunnel --url http://127.0.0.1:8000`, then paste the printed
+`https://…trycloudflare.com` URL into the app's settings.
 
 ## Running the tests
 
