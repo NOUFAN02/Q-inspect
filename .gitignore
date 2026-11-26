@@ -1,0 +1,31 @@
+# Secrets / local config
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtual environment
+venv/
+.venv/
+
+# Playwright / browser cache
+.cache/
+
+# Node / Expo
+node_modules/
+.expo/
+
+# Local Claude Code settings
+.claude/
+
+# Build artifacts (attach APKs to a GitHub Release instead)
+*.apk
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

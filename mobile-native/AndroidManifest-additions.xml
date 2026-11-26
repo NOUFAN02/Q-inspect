@@ -1,0 +1,13 @@
+<!-- Add these two <uses-permission> lines just INSIDE <manifest>, above <application>. -->
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.INTERNET" />
+
+<!--
+  Also add this attribute to the existing <application ...> tag:
+
+      android:usesCleartextTraffic="true"
+
+  (Only needed if you ever test against a plain http:// LAN address. The
+   Cloudflare tunnel is https:// so it works without it, but it is harmless
+   for development.)
+-->

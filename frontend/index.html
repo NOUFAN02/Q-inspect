@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q Inspect | Threat Intelligence Pre-Scanner</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background grid decoration -->
+    <div class="bg-glow"></div>
+    <div class="bg-grid"></div>
+
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-icon"></span>
+                <span class="logo-text">Q <span class="highlight">INSPECT</span></span>
+                <span class="badge-tag">v1.0 RESEARCH</span>
+            </div>
+            <div class="nav-links">
+                <a href="#how-it-works">Methodology</a>
+                <a href="/docs" target="_blank" class="nav-btn">API Docs</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">Analyse suspicious QR codes & URLs</h1>
+            <p class="hero-subtitle">
+                Pre-visit optical inspection, multi-hop redirect unmasking, SSL verification, and heuristic phishing detection before your device connects.
+            </p>
+        </section>
+
+        <!-- VirusTotal-style Tabbed Scanner Card -->
+        <section class="scanner-card">
+            <div class="tabs">
+                <button class="tab-btn active" id="tab-file-btn">
+                    <span class="tab-icon">📁</span> QR CODE FILE
+                </button>
+                <button class="tab-btn" id="tab-url-btn">
+                    <span class="tab-icon">🔗</span> DIRECT URL
+                </button>
+            </div>
+
+            <!-- Tab 1: File Upload -->
+            <div class="tab-content" id="tab-file-content">
+                <div class="dropzone" id="dropzone">
+                    <input type="file" id="file-input" accept="image/png,image/jpeg,image/jpg,image/webp" hidden>
+                    <div class="dropzone-content">
+                        <div class="upload-icon-wrapper">
+                            <span class="upload-icon">📷</span>
+                        </div>
+                        <h3>Drag and drop your QR code image here</h3>
+                        <p class="dropzone-hint">Supports PNG, JPG, JPEG, WEBP (Max 10MB)</p>
+                        <button class="btn btn-primary" id="browse-btn" type="button">Choose File</button>
+                    </div>
+                    <div class="preview-area hidden" id="preview-area">
+                        <img id="image-preview" src="" alt="QR Preview">
+                        <div class="preview-details">
+                            <span id="preview-filename" class="mono">image.png</span>
+                            <span id="preview-filesize">0 KB</span>
+                            <button id="clear-file-btn" class="btn-text">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: URL Input -->
+            <div class="tab-content hidden" id="tab-url-content">
+                <div class="url-input-wrapper">
+                    <span class="url-icon">🌐</span>
+                    <input type="text" id="url-input" placeholder="https://example.com/login or paste encoded QR target..." autocomplete="off">
+                    <button class="btn btn-primary" id="scan-url-btn" type="button">Scan URL</button>
+                </div>
+            </div>
+
+            <!-- Scan Action Bar & Progress -->
+            <div class="action-bar hidden" id="action-bar">
+                <button class="btn btn-scan" id="submit-scan-btn">
+                    <span class="btn-spinner hidden" id="btn-spinner"></span>
+                    <span id="btn-text">🔍 INITIATE DEEP INSPECTION</span>
+                </button>
+            </div>
+
+            <div class="progress-bar-container hidden" id="scan-progress">
+                <div class="progress-bar-track">
+                    <div class="progress-bar-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-status mono" id="progress-text">Decoding QR matrix...</div>
+            </div>
+        </section>
+
+        <!-- Threat Intelligence Report Section -->
+        <section class="results-section hidden" id="results-section">
+            <div class="report-header">
+                <div>
+                    <h2 class="report-title">Threat Assessment Report</h2>
+                    <p class="report-timestamp mono" id="report-timestamp">Scanned on: 2026-11-19 14:00:00</p>
+                </div>
+                <button class="btn btn-outline" id="rescan-btn">Scan Another</button>
+            </div>
+
+            <!-- Score Summary Banner -->
+            <div class="verdict-banner" id="verdict-banner">
+                <div class="gauge-container">
+                    <div class="radial-gauge" id="radial-gauge">
+                        <div class="gauge-inner">
+                            <span class="gauge-value mono" id="gauge-score">0</span>
+                            <span class="gauge-max mono">/100</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="verdict-info">
+                    <div class="verdict-badge" id="verdict-badge">SAFE</div>
+                    <h3 class="verdict-summary" id="verdict-summary">No threat indicators detected.</h3>
+                    <p class="verdict-description" id="verdict-desc">The target does not match known phishing patterns, uses trusted SSL, and did not execute deceptive redirection.</p>
+                </div>
+            </div>
+
+            <!-- Key Metrics Grid -->
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">PAYLOAD TYPE</div>
+                    <div class="metric-value mono" id="metric-type">URL</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">DECODED TARGET</div>
+                    <div class="metric-value mono truncate" id="metric-payload">-</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">REDIRECT HOPS</div>
+                    <div class="metric-value mono" id="metric-hops">0 hops</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">DOMAIN AGE</div>
+                    <div class="metric-value mono" id="metric-age">-</div>
+                </div>
+            </div>
+
+            <!-- Live Page Inspection (Dynamic Sandbox Layer) -->
+            <div class="card detail-card live-inspection hidden" id="live-inspection-card">
+                <div class="card-header">
+                    <h3>🖥️ Live Page Inspection <span class="layer-tag">SANDBOX RENDER</span></h3>
+                    <span class="live-status mono" id="live-status">RENDERED</span>
+                </div>
+                <div class="card-body">
+                    <div class="live-grid">
+                        <div class="live-screenshot-wrap">
+                            <img id="live-screenshot" src="" alt="Rendered page screenshot" class="live-screenshot">
+                            <div class="live-screenshot-empty" id="live-screenshot-empty">No screenshot captured</div>
+                        </div>
+                        <div class="live-findings" id="live-findings">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis Accordions/Cards -->
+            <div class="analysis-grid">
+                <!-- Flagged Indicators Card -->
+                <div class="card detail-card">
+                    <div class="card-header">
+                        <h3>🚩 Detected Threat Indicators (<span id="indicator-count">0</span>)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="indicators-list" class="indicators-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Redirect Chain Timeline Card -->
+                <div class="card detail-card">
+                    <div class="card-header">
+                        <h3>🔀 Redirect Chain & Destination Path</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="redirect-timeline" class="timeline">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Domain & Cryptographic SSL Card -->
+                <div class="card detail-card">
+                    <div class="card-header">
+                        <h3>🔒 Host & TLS/SSL Certificate Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-table" id="ssl-info-table">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Static URL Heuristics Card -->
+                <div class="card detail-card">
+                    <div class="card-header">
+                        <h3>🔬 Static URL Heuristics</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-table" id="heuristics-table">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Threat Intelligence (VirusTotal) Card -->
+                <div class="card detail-card">
+                    <div class="card-header">
+                        <h3>🧠 Threat Intelligence <span class="layer-tag">VIRUSTOTAL</span></h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-table" id="reputation-table">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Methodology Section (Great for Project Presentation) -->
+        <section class="methodology-section" id="how-it-works">
+            <h2>System Architecture & Defense Layers</h2>
+            <div class="methodology-grid">
+                <div class="method-card">
+                    <span class="method-num">01</span>
+                    <h4>Optical CV Decoding</h4>
+                    <p>Computer Vision QRCodeDetector algorithm extracts raw bitstream matrices from damaged, scaled, or tilted QR codes.</p>
+                </div>
+                <div class="method-card">
+                    <span class="method-num">02</span>
+                    <h4>SSRF Isolation Firewall</h4>
+                    <p>Blocks attacks targeting internal networks (RFC 1918), link-local IP addresses, and cloud provider metadata endpoints.</p>
+                </div>
+                <div class="method-card">
+                    <span class="method-num">03</span>
+                    <h4>Redirect & Shortener Tracing</h4>
+                    <p>Unmasks URL shorteners and follows multi-hop redirect chains to reveal the true final destination before any visit.</p>
+                </div>
+                <div class="method-card highlight-card">
+                    <span class="method-num">04</span>
+                    <h4>Sandboxed Content Detonation</h4>
+                    <p>Renders the final page inside an isolated headless browser to detect brand impersonation, fake login forms, and cross-domain credential theft — regardless of hosting or domain age.</p>
+                </div>
+                <div class="method-card">
+                    <span class="method-num">05</span>
+                    <h4>Multi-Factor Risk Scoring</h4>
+                    <p>Fuses infrastructure, domain freshness, TLS validity, structural heuristics, and live content signals into a single 0–100 verdict.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <p>Q Inspect — MSc Cybersecurity Research Project</p>
+            <p class="mono text-muted">Multi-layered Anti-Phishing & Pre-Visit Threat Assessment</p>
+        </div>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
